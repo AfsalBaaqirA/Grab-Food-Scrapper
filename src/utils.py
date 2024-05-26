@@ -7,6 +7,7 @@ import google_colab_selenium as gs
 
 def setup_driver():
      driver = gs.Chrome()
+     return driver
 
 def store_data(restaurant_data):
         with gzip.open(f"data/restaurant_data.ndjson.gz", "wt", encoding="utf-8") as f:
