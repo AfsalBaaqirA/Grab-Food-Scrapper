@@ -3,14 +3,10 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import gzip
 import ndjson
+import google_colab_selenium as gs
 
 def setup_driver():
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(options=chrome_options, service=Service(ChromeDriverManager().install()))
-    return driver
+     driver = gs.Chrome()
 
 def store_data(restaurant_data):
         with gzip.open(f"data/restaurant_data.ndjson.gz", "wt", encoding="utf-8") as f:
