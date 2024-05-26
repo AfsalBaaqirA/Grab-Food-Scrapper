@@ -1,14 +1,14 @@
 from selenium import webdriver
-from selenium.webdriver.edge.service import Service
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import gzip
 import ndjson
 
 def setup_driver():
-    options = webdriver.EdgeOptions()
+    options = webdriver.ChromeOptions()
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
-    driver = webdriver.Edge(service=Service(EdgeChromiumDriverManager().install()), options=options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     return driver
 
 def store_data(restaurant_data):
