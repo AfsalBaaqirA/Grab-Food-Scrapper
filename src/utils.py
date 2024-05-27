@@ -12,10 +12,9 @@ def setup_driver():
     return driver
 
 def store_data(restaurant_data):
-        with gzip.open(f"data/restaurant_data.ndjson.gz", "wt", encoding="utf-8") as f:
+        with gzip.open(f"data/extracted_data.ndjson.gz", "wt", encoding="utf-8") as f:
             writer = ndjson.writer(f)
             while not restaurant_data.empty():
                 data = restaurant_data.get()
                 if data is not None:
                     writer.writerow(data)
-    

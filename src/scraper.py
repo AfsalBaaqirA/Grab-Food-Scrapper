@@ -1,11 +1,8 @@
-import gzip
-import json
+from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
 import threading
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
-import ndjson
 import logging
 from utils import setup_driver, store_data
 import requests
@@ -43,20 +40,13 @@ class GrabFoodScraper:
         self.driver.get("https://food.grab.com/sg/en/restaurants") # URL to scrape restaurant details
         self.scroll_down() # Scroll down to load all restaurants
         restaurants = self.driver.find_elements(By.CLASS_NAME, 'RestaurantListCol___1FZ8V') # Get all restaurant cards
-        
-        # Split the restaurants into two halves and process them in parallel
-        mid_index = len(restaurants) // 2
-        restaurants1 = restaurants[:mid_index]
-        restaurants2 = restaurants[mid_index:]
 
-        thread1 = threading.Thread(target=self.process_restaurants, args=(restaurants1,))
-        thread2 = threading.Thread(target=self.process_restaurants, args=(restaurants2,))
-
-        thread1.start()
-        thread2.start()
-
-        thread1.join()
-        thread2.join()
+        num_workers = 3  # Change this to adjust the number of worker threads
+        with ThreadPoolExecutor(max_workers=num_workers) as executor:
+            for i in range(num_workers):
+                start = i * len(restaurants) // num_workers
+                end = (i + 1) * len(restaurants) // num_workers
+                executor.submit(self.process_restaurants, restaurants[start:end])
 
 
     # Retrieves basic details directly from the card
@@ -89,7 +79,7 @@ class GrabFoodScraper:
     def get_info_from_api(self, restaurant_id, restaurant_name, restaurant_cuisine, promotional_offers):
         try:
             time.sleep(3)
-            url = f"https://portal.grab.com/foodweb/v2/merchants/{restaurant_id}?latlng=1.367210,103.858589"
+            url = f"https://portal.grab.com/foodweb/v2/merchants/{restaurant_id}?latlng=1.367476,103.858326"
             max_retries = 3
             backoff_time = 300  # Initial backoff time in seconds
 

@@ -74,3 +74,27 @@ To run the scraper, navigate to the `src` directory and run the `scraper.py` scr
 2. Dual Thread Time taken: 79.92468237876892
 
 Note: The time taken is for scraping 290-295 restaurants for the location ```Chong Boon Dental Surgery - Block 456 Ang Mo Kio Avenue 10, #01-1574, Singapore, 560456``` time may vary depending on network speed and hardware capabilities.
+
+## Important Notes
+1. The API has a rate limit, so increasing the number of threads results in 429 HTTP Error.
+2. While running the scraper, you may experience 429 HTTP Error too, so I would suggest you to either try after some time or reduce the number of threads.
+3. I have implemented threadpool so it will be easy to scale up and down while testing the scraper.
+4. To change the location you need to change the cookies. Just replace the already existing location cookie with this value.
+        ```
+         "location": '{
+                "latitude": 1.396364,
+                "longitude": 103.747462,
+                "address": "Choa Chu Kang North 6, Singapore, 689577",
+                "countryCode": "SG",
+                "isAccurate": True,
+                "addressDetail": "PT Singapore - Choa Chu Kang North 6, Singapore, 689577",
+                "noteToDriver": "",
+                "city": "Singapore City",
+                "cityID": 6,
+                "displayAddress": "PT Singapore - Choa Chu Kang North 6, Singapore, 689577"
+                }'
+        ```
+5. After changing the location cookie, you need to change the geolocation details in the API endpoint too.
+```
+url = f"https://portal.grab.com/foodweb/v2/merchants/{restaurant_id}?latlng=1.396364,103.747462"
+```
